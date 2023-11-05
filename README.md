@@ -3,12 +3,12 @@ Requirements:
 * Poetry
 
 Installation:
-`cd into/the/cloned/repo/`
-`poetry install`
+⋅⋅⋅`cd into/the/cloned/repo/`
+⋅⋅⋅`poetry install`
 
 Usage:
-`uvicorn main:app --reload`
-Now it should be accessible via localhost:8000
+⋅⋅⋅`uvicorn main:app --reload`
+⋅⋅⋅Now it should be accessible via localhost:8000
 
 Docs:
-`localhost:8000/docs`
+⋅⋅⋅`localhost:8000/docs`
