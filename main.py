@@ -1,5 +1,6 @@
 import mlflow
 import os
+import shutil
 from fastapi import FastAPI, HTTPException
 from typing import List
 from models import Model
@@ -120,3 +121,15 @@ def get_prediction(name: str, data: List[List[float]]):
             raise HTTPException(status_code=404, detail=f"Wrong feature count in row {i+1}, should be {size}, now is {len(datapoint)}")
     res = model.predict(data)
     return list(res)
+
+@app.delete("/deleteModel")
+def delete_model(name: str):
+    """_summary_
+
+    Args:
+        name (str): _description_
+    """
+    if name not in get_availible_models():
+        raise HTTPException(status_code=404, detail="No such model")
+    shutil.rmtree(f"mlflow_{name}")
+
