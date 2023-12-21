@@ -1,0 +1,21 @@
+services:
+  minio:
+    image: docker.io/bitnami/minio:2023
+    ports:
+      - '9110:9000'
+      - '9111:9001'
+    environment:
+      - MINIO_ROOT_USER=abobusamogus
+      - MINIO_ROOT_PASSWORD=darkmagapatriot
+      - MINIO_DEFAULT_BUCKETS=models
+    volumes:
+      - './data/minio:/bitnami/minio/data'
+
+  # mainapp:
+  #   image: docker.io/orson88/mlops:main
+  #   ports:
+  #     - '8181:8080'
+
+volumes:
+  minio_data:
+    driver: local
