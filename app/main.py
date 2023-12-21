@@ -4,14 +4,7 @@ import shutil
 from fastapi import FastAPI, HTTPException
 from typing import List
 from models import Model
-
-
-def get_availible_models():
-    return [
-        d.split('_')[1] for d in os.listdir() if os.path.isdir(d) and d.startswith("mlflow_")
-        ]
-
-
+from utils import get_available_models
 app = FastAPI()
 
 
