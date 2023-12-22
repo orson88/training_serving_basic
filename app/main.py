@@ -4,7 +4,8 @@ import shutil
 from fastapi import FastAPI, HTTPException
 from typing import List
 from models import Model
-from utils import get_available_models
+from utils import get_availible_models
+from minio_access import save_model, list_models, delete_model
 app = FastAPI()
 
 
@@ -86,7 +87,7 @@ def get_trained_models():
     Returns:
         list: list of the names availible
     """   
-    return get_availible_models()
+    return list_models()
 
 
 @app.post("/predict/")
@@ -107,6 +108,7 @@ def get_prediction(name: str, data: List[List[float]]):
     """    
     if name not in get_availible_models():
         raise HTTPException(status_code=404, detail="No such model")
+
     model = mlflow.sklearn.load_model(f"mlflow_{name}")
     size = model.n_features_in_
     for i, datapoint in enumerate(data):
@@ -124,5 +126,7 @@ def delete_model(name: str):
     """
     if name not in get_availible_models():
         raise HTTPException(status_code=404, detail="No such model")
-    shutil.rmtree(f"mlflow_{name}")
+        
+    delete_model(name)
+
 

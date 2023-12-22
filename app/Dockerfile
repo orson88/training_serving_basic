@@ -16,6 +16,13 @@ RUN poetry install
 # Copy the rest of the files to the working directory
 COPY . /app
 
+
+ENV MLFLOW_TRACKING_URI postgresql+psycopg2://postgres:postgres@mlflow-postgres/mlflow_db
+ENV MLFLOW_S3_ENDPOINT_URL http://minio:9110
+ENV AWS_ACCESS_KEY_ID abobusamogus
+ENV AWS_SECRET_ACCESS_KEY darkmagapatriot
+
+
 # Expose port 8080
 EXPOSE 8080
 
