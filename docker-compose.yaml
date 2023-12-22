@@ -11,6 +11,18 @@ services:
     volumes:
       - './data/minio:/bitnami/minio/data'
 
+  mlflow-postgres:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mlflow_db
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
   # mainapp:
   #   image: docker.io/orson88/mlops:main
   #   ports:
@@ -18,4 +30,6 @@ services:
 
 volumes:
   minio_data:
+    driver: local
+  mlflow_postgres_data:
     driver: local
