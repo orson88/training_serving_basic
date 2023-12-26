@@ -1,22 +1,17 @@
-import mlflow
 import os
-import shutil
-from fastapi import FastAPI, HTTPException
 from typing import List
+import shutil
+import mlflow
+from fastapi import FastAPI, HTTPException
 from models import Model, train_model, use_pretrained
-from minio_access import save_model, list_models, delete_model
+from minio_access import list_models, delete_model
 
-os.environ["MLFLOW_TRACKING_URI"] = "postgresql+psycopg2://postgres:postgres@localhost/mlflow_db"
-os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9110"
-os.environ["AWS_ACCESS_KEY_ID"] = "abobusamogus"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "darkmagapatriot"
-
-experiment_name = "demo_experiment"
+EXPERIMENT_NAME = "demo_experiment"
 try:
-    mlflow.create_experiment(experiment_name, artifact_location="s3://mlflow")
+    mlflow.create_experiment(EXPERIMENT_NAME, artifact_location="s3://mlflow")
 except Exception as e:
     pass
-mlflow.set_experiment(experiment_name)
+mlflow.set_experiment(EXPERIMENT_NAME)
 
 
 app = FastAPI()
@@ -40,7 +35,7 @@ def get_model_hyperparams(model: str):
 
     Returns:
         dict: str(hyperparameter name)
-    """    
+    """
     if model in Model._MODELINFO.keys():
         return Model._MODELINFO[model]['hyperparameters']
     else:
@@ -81,7 +76,7 @@ def train(
     if hyperparameters.keys() != Model._MODELINFO[model]['hyperparameters'].keys():
         raise HTTPException(
             status_code=404,
-            detail=f"Wrong hyperparameter structure, should be like {Model._MODELINFO[model]['hyperparameters'].keys()}"
+            detail=f"Wrong hyperparameter structure"
         )
     train_model(model, hyperparameters, data)
     return 'done'

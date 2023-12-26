@@ -5,12 +5,6 @@ from sklearn.ensemble import RandomForestRegressor
 from typing import List
 import os
 
-os.environ["MLFLOW_TRACKING_URI"] = "postgresql+psycopg2://postgres:postgres@localhost/mlflow_db"
-os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9110"
-os.environ["AWS_ACCESS_KEY_ID"] = "abobusamogus"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "darkmagapatriot"
-
-
 experiment_name = "demo_experiment"
 try:
     mlflow.create_experiment(experiment_name, artifact_location="s3://mlflow")

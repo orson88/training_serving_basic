@@ -21,7 +21,8 @@ ENV MLFLOW_TRACKING_URI postgresql+psycopg2://postgres:postgres@mlflow-postgres/
 ENV MLFLOW_S3_ENDPOINT_URL http://minio:9110
 ENV AWS_ACCESS_KEY_ID abobusamogus
 ENV AWS_SECRET_ACCESS_KEY darkmagapatriot
-
+ENV INITIAL_DATA_PATH=/app/initial-data/
+ENV PREPARED_DATA_PATH=/app/processed-data/
 
 # Expose port 8080
 EXPOSE 8080

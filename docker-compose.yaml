@@ -23,10 +23,10 @@ services:
     ports:
       - "5432:5432"
 
-  # mainapp:
-  #   image: docker.io/orson88/mlops:main
-  #   ports:
-  #     - '8181:8080'
+  mainapp:
+    image: docker.io/orson88/mlops:main
+    ports:
+      - '8181:8080'
 
 volumes:
   minio_data:
