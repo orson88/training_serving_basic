@@ -119,15 +119,15 @@ def get_prediction(name: str, data: List[List[float]]):
     return list(res)
 
 @app.delete("/deleteModel")
-def delete_model(name: str):
+def deleteModel(name: str):
     """_summary_
 
     Args:
         name (str): _description_
     """
-    if name not in use_pretrained():
+    if name not in list_models():
         raise HTTPException(status_code=404, detail="No such model")
         
-    delete_model(name)
+    return delete_model(name)
 
 

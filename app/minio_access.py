@@ -30,5 +30,13 @@ def list_models():
 
 def delete_model(modelname: str):
     client = create_client()
-    client.remove_object("models", modelname)
+    run_id = modelname.split('__')[0]
+    path1 = [_.object_name for _ in client.list_objects("mlflow", run_id)]
+    path2 = [_.object_name for _ in client.list_objects("mlflow", path1)]
+    paths3 = [_.object_name for _ in client.list_objects("mlflow", path2)]
+    paths4 = [_.object_name for _ in client.list_objects("mlflow", paths3)]
+    for path in paths4:
+        client.remove_object("mlflow", path)
     return "done"
+
+
