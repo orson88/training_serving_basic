@@ -3,7 +3,7 @@ import os
 import shutil
 from fastapi import FastAPI, HTTPException
 from typing import List
-from models import Model, train_model
+from models import Model, train_model, use_pretrained
 from minio_access import save_model, list_models, delete_model
 
 os.environ["MLFLOW_TRACKING_URI"] = "postgresql+psycopg2://postgres:postgres@localhost/mlflow_db"
@@ -21,7 +21,7 @@ mlflow.set_experiment(experiment_name)
 
 app = FastAPI()
 
-
+4
 @app.get("/models")  # Получаем все варианты
 def get_available_models():
     return list(Model._MODELINFO.keys())
@@ -112,15 +112,10 @@ def get_prediction(name: str, data: List[List[float]]):
     Returns:
         List: List of predictions
     """    
-    if name not in get_availible_models():
+    if name not in list_models():
         raise HTTPException(status_code=404, detail="No such model")
 
-    model = mlflow.sklearn.load_model(f"mlflow_{name}")
-    size = model.n_features_in_
-    for i, datapoint in enumerate(data):
-        if len(datapoint) != size:
-            raise HTTPException(status_code=404, detail=f"Wrong feature count in row {i+1}, should be {size}, now is {len(datapoint)}")
-    res = model.predict(data)
+    res = use_pretrained(name, data)
     return list(res)
 
 @app.delete("/deleteModel")
@@ -130,7 +125,7 @@ def delete_model(name: str):
     Args:
         name (str): _description_
     """
-    if name not in get_availible_models():
+    if name not in use_pretrained():
         raise HTTPException(status_code=404, detail="No such model")
         
     delete_model(name)

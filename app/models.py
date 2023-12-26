@@ -3,6 +3,13 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from typing import List
+import os
+
+os.environ["MLFLOW_TRACKING_URI"] = "postgresql+psycopg2://postgres:postgres@localhost/mlflow_db"
+os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9110"
+os.environ["AWS_ACCESS_KEY_ID"] = "abobusamogus"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "darkmagapatriot"
+
 
 experiment_name = "demo_experiment"
 try:
@@ -75,3 +82,12 @@ def train_model(model, hyperparameters, data):
         clf = clf.model
         clf.fit(data, y)
         mlflow.sklearn.log_model(clf, gen_model_name(modelname, hyperparameters))
+
+def use_pretrained(modelname, data):
+    run_id = modelname.split('__')[0]
+    model_id = modelname.split('__')[1]
+    loaded_model = mlflow.sklearn.load_model(
+        f"s3://mlflow/{run_id}/artifacts/{model_id}"
+        )
+    return loaded_model.predict(data)
+

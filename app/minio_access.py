@@ -25,7 +25,7 @@ def list_models():
     for run in objects:
         path = [_.object_name for _ in client.list_objects("mlflow", run.object_name+"artifacts/")]
         modelname = path[0].split('/')[-2]
-        outs.append(modelname+path[0].split('/')[0])
+        outs.append(path[0].split('/')[0]+"__"+modelname)
     return outs
 
 def delete_model(modelname: str):
