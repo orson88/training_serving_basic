@@ -4,6 +4,15 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from typing import List
 
+experiment_name = "demo_experiment"
+try:
+    mlflow.create_experiment(experiment_name, artifact_location="s3://mlflow")
+except Exception as e:
+    pass
+mlflow.set_experiment(experiment_name)
+
+
+
 class Model:
     _MODELINFO = {
     "Linear Regression": {
@@ -53,9 +62,16 @@ class Model:
         self.model.fit(data, y)
         self.trained = True
 
-    def save_model(self, model_name, experiment_name):
-        if self.trained:
-            mlflow.sklearn.save_model(self.model, f"mlflow_{experiment_name}")
-        else:
-            print('model not trained')
+def gen_model_name(model, hyperparameters):
+    result = model + '_'
+    result += "|".join([f"{key}-{value}" for key, value in hyperparameters.items()])
+    return result
 
+def train_model(model, hyperparameters, data):
+    with mlflow.start_run():
+        y = [datapoint.pop(-1) for datapoint in data]
+        modelname = model
+        clf = Model(model, hyperparameters)
+        clf = clf.model
+        clf.fit(data, y)
+        mlflow.sklearn.log_model(clf, gen_model_name(modelname, hyperparameters))

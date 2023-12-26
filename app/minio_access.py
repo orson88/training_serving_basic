@@ -20,8 +20,13 @@ def save_model(model_filename: str):
 
 def list_models():
     client = create_client()
-    objects = client.list_objects("models")
-    return [_.object_name for _ in objects]
+    objects = client.list_objects("mlflow")
+    outs = []
+    for run in objects:
+        path = [_.object_name for _ in client.list_objects("mlflow", run.object_name+"artifacts/")]
+        modelname = path[0].split('/')[-2]
+        outs.append(modelname+path[0].split('/')[0])
+    return outs
 
 def delete_model(modelname: str):
     client = create_client()
